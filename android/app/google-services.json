@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "905627642808",
+    "firebase_url": "https://flutter-chat-bloc-rxdart.firebaseio.com",
+    "project_id": "flutter-chat-bloc-rxdart",
+    "storage_bucket": "flutter-chat-bloc-rxdart.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905627642808:android:cc8011c823e51a3c5bfd4d",
+        "android_client_info": {
+          "package_name": "com.example.flutter_chat_bloc_rxdart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905627642808-shpgmvji22ahn9p35gefeuopk3n1fpkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYLB3-fe_RcoNgdt80wE_LpBGieggw2ig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905627642808-shpgmvji22ahn9p35gefeuopk3n1fpkn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "905627642808-b9gqavj7pi9maa5bt2l8mjf6trvifnvs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterChatBlocRxdart"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
