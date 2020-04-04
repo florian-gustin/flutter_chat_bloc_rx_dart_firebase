@@ -23,7 +23,7 @@ class BlocRoot extends BlocBase {
   Stream<FirebaseUser> get signUp => firebase.handleCreate(
       _user.mail, _user.password, _user.firstname, _user.lastname);
   Stream<void> get signOut => firebase.handleSignOut;
-  Stream<String> get currentUser => firebase.handleCurrentUser;
+  Stream<String> get getUID => firebase.userUID;
 
   void sync() async {
     sink.add(_user);

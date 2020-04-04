@@ -35,7 +35,7 @@ class Firebase {
 
   Stream<void> get handleSignOut => auth.signOut().asStream();
 
-  Stream<String> get handleCurrentUser =>
+  Stream<String> get userUID =>
       auth.currentUser().asStream().map((FirebaseUser user) => user?.uid);
 
   // db

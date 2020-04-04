@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
     final bloc = GetBloc.of<BlocRoot>(context);
 
     return StreamBuilder<String>(
-      stream: bloc.currentUser,
+      stream: bloc.getUID,
       builder: (ctx, snapshot) {
         if (snapshot.hasData) {
           final String id = snapshot.data;
