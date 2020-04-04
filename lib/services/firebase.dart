@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_chat_bloc_rxdart/models/user.dart';
 
 class Firebase {
   // auth
@@ -46,12 +50,30 @@ class Firebase {
     baseUser.child(uid).set(map);
   }
 
-  Stream<DataSnapshot> getUserData(String id) {
+  Stream<User> getUserData(String id) {
     return baseUser
         .child(id)
         .once()
         .asStream()
-        .map((DataSnapshot dataSnapshot) => dataSnapshot);
+        .map((DataSnapshot dataSnapshot) => User.fromMap(dataSnapshot));
+  }
+
+  // storage
+  static final baseStorage = FirebaseStorage.instance.ref();
+  final StorageReference storageUsers = baseStorage.child('users');
+
+  Stream<dynamic> savePicture(File file, StorageReference storageReference) {
+    return Stream.fromFuture(getImageFirestoreUrl(file, storageReference))
+        .map((url) => url);
+  }
+
+  Future<String> getImageFirestoreUrl(
+      File file, StorageReference storageReference) async {
+    StorageUploadTask storageUploadTask = storageReference.putFile(file);
+    StorageTaskSnapshot storageTaskSnapshot =
+        await storageUploadTask.onComplete;
+    String url = await storageTaskSnapshot.ref.getDownloadURL();
+    return url;
   }
 
   Firebase();

@@ -23,7 +23,7 @@ class User {
     imageUrl = map['imageUrl'];
     if (firstname != null && firstname.length > 0) initials = firstname[0];
     if (lastname != null && lastname.length > 0 && initials != null)
-      initials += firstname[0];
+      initials += lastname[0];
   }
 
   Map toMap() {
