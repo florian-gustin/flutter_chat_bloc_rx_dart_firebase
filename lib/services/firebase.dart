@@ -46,5 +46,13 @@ class Firebase {
     baseUser.child(uid).set(map);
   }
 
+  Stream<DataSnapshot> getUserData(String id) {
+    return baseUser
+        .child(id)
+        .once()
+        .asStream()
+        .map((DataSnapshot dataSnapshot) => dataSnapshot);
+  }
+
   Firebase();
 }

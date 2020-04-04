@@ -55,7 +55,8 @@ class BlocRoot extends BlocBase {
   }
 
   void addUID(String id) {
-    _user.uid = id;
+    _user.id = id;
+    _user.status = null;
     sync();
   }
 

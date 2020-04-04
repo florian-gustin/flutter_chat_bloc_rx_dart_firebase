@@ -48,17 +48,7 @@ class HomePage extends StatelessWidget {
                   appBar: AppBar(
                     title: title,
                   ),
-                  body: Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          bloc.signOut;
-                        },
-                        child: Text('Sign Out'),
-                      ),
-                      tabSelected,
-                    ],
-                  ),
+                  body: tabSelected,
                 );
               },
             );
