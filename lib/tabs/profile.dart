@@ -1,23 +1,57 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bloc_rxdart/blocs/base.dart';
 import 'package:flutter_chat_bloc_rxdart/blocs/bloc_profile.dart';
 import 'package:flutter_chat_bloc_rxdart/models/user.dart';
 import 'package:flutter_chat_bloc_rxdart/widgets/image_widget.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class Profile extends StatelessWidget {
+  Future<void> _handleSignOut(BuildContext context, bloc) async {
+    Text title = Text('SIGN OUT !');
+    Text subtitle = Text('Are you sure ?');
+
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return (Theme.of(context).platform == TargetPlatform.iOS)
+              ? CupertinoAlertDialog(
+                  title: title,
+                  content: subtitle,
+                  actions: _actions(context, bloc),
+                )
+              : AlertDialog(
+                  title: title,
+                  content: subtitle,
+                  actions: _actions(context, bloc),
+                );
+        });
+  }
+
+  List<Widget> _actions(BuildContext context, bloc) {
+    List<Widget> widgets = [];
+
+    widgets.add(FlatButton(
+        onPressed: () {
+          bloc.signOut;
+          Navigator.of(context).pop();
+        },
+        child: Text('YES')));
+    widgets.add(FlatButton(
+        onPressed: () => Navigator.of(context).pop(), child: Text('NO')));
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     final bloc = GetBloc.of<BlocProfile>(context);
 
     return StreamBuilder<User>(
-      stream: bloc.userData,
+      stream: bloc.stream,
       builder: (_, snap) {
         if (snap.hasData) {
           final User user = snap.data;
-          bloc.syncToModel(snap.data);
           return SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.all(20.0),
@@ -73,7 +107,7 @@ class Profile extends StatelessWidget {
                   ),
                   FlatButton(
                     onPressed: () {
-                      bloc.signOut();
+                      _handleSignOut(context, bloc);
                     },
                     child: Text(
                       'Sign Out',

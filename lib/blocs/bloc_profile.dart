@@ -8,16 +8,28 @@ import 'package:flutter_chat_bloc_rxdart/constants.dart';
 import 'package:flutter_chat_bloc_rxdart/models/user.dart';
 import 'package:flutter_chat_bloc_rxdart/services/firebase.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rxdart/rxdart.dart';
 
 class BlocProfile extends BlocBase {
   String id;
   Firebase _firebase = Firebase();
   User _user;
 
-  Stream<User> get userData => _firebase.getUserData(id);
+  BehaviorSubject<User> _subject = BehaviorSubject<User>();
+  Stream<User> get stream => _subject.stream;
+  Sink<User> get sink => _subject.sink;
 
-  void syncToModel(User user) {
-    _user = user;
+  void get signOut => _firebase.handleSignOut;
+
+  BlocProfile({@required this.id}) {
+    refreshUserFromDB();
+  }
+
+  void refreshUserFromDB() {
+    _firebase.getUserData(id).listen((User user) {
+      _user = user;
+      sink.add(user);
+    });
   }
 
   void takePicture(ImageSource source) {
@@ -27,33 +39,24 @@ class BlocProfile extends BlocBase {
       _firebase
           .savePicture(file, _firebase.storageUsers.child(id))
           .listen((str) {
+        _user.imageUrl = str;
         Map m = _user.toMap();
-        m['imageUrl'] = str;
         _firebase.addUser(_user.id, m);
+        refreshUserFromDB();
       });
     });
-
-    // problem le bloc User écoute pas si je le reactualise pas.
   }
 
-  BlocProfile({@required this.id});
+  void updateFirstname(String newFirstname) => _user.firstname = newFirstname;
+  void updateLastname(String newLastname) => _user.lastname = newLastname;
 
-  void fromStreamToUser(snapshot) {
-    _user = User.fromMap(snapshot);
-  }
-
-  void updateFirstname(String newFirstname) {
-    _user.firstname = newFirstname;
-  }
-
-  void updateLastname(String newLastname) {
-    _user.lastname = newLastname;
-  }
-
-  void saveChanges() {}
-
-  void signOut() {
-    _firebase.handleSignOut;
+  void saveChanges() {
+    Map m = _user.toMap();
+    if ((_user.firstname != null && _user.firstname != '') ||
+        (_user.lastname != null && _user.lastname != '')) {
+      _firebase.addUser(_user.id, m);
+      refreshUserFromDB();
+    }
   }
 
   @override
