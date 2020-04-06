@@ -1,38 +1,32 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chat_bloc_rxdart/blocs/base.dart';
-import 'package:flutter_chat_bloc_rxdart/blocs/bloc_router.dart';
 import 'package:flutter_chat_bloc_rxdart/constants.dart';
 import 'package:flutter_chat_bloc_rxdart/models/user.dart';
 import 'package:flutter_chat_bloc_rxdart/services/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
-class BlocContacts extends BlocBase {
+class BlocChat extends BlocBase {
   String id;
+  User interlocutor;
   Firebase _firebase;
 
   BehaviorSubject<User> _subject = BehaviorSubject<User>();
   Stream<User> get stream => _subject.stream;
   Sink<User> get sink => _subject.sink;
 
-  Future<dynamic> goChat(interlocutor, context) =>
-      BlocRouter().chat(id: id, interlocutor: interlocutor, context: context);
-
-  BlocContacts({@required this.id}) {
+  BlocChat({@required this.id, this.interlocutor}) {
     _firebase = Firebase();
-    getUserFromDB();
+    getInterlocutorFromDB(interlocutor);
   }
 
-  Query get queryBaseUser => _firebase.baseUser;
-
-  getUserFromDB() {
-    _firebase.getUserData(id).listen((User user) {
+  getInterlocutorFromDB(User user) {
+    _firebase.getUserData(user.id).listen((User user) {
       sink.add(user);
     });
   }
 
   @override
   void dispose() {
-    fDisposingBlocOf('Bloc Contacts');
+    fDisposingBlocOf('BlocChat');
   }
 }

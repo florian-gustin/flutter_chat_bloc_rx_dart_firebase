@@ -16,8 +16,8 @@ class User {
   User();
 
   User.fromMap(DataSnapshot snapshot) {
-    id = snapshot.key;
     Map<dynamic, dynamic> map = snapshot.value;
+    id = map['uid'];
     firstname = map['firstname'];
     lastname = map['lastname'];
     imageUrl = map['imageUrl'];

@@ -25,7 +25,7 @@ class BlocProfile extends BlocBase {
     refreshUserFromDB();
   }
 
-  void refreshUserFromDB() {
+  void refreshUserFromDB() async {
     _firebase.getUserData(id).listen((User user) {
       _user = user;
       sink.add(user);

@@ -29,7 +29,7 @@ class Firebase {
         .createUserWithEmailAndPassword(email: mail, password: password)
         .catchError(print)
         .asStream()
-        .map((AuthResult authResult) {
+        .listen((AuthResult authResult) {
       String uid = authResult?.user?.uid;
       if (uid != null) {
         Map<String, String> map = {
@@ -49,6 +49,8 @@ class Firebase {
   // db
   static final base = FirebaseDatabase.instance.reference();
   final baseUser = base.child('users');
+  final baseMsg = base.child('messages');
+  final baseDiscussion = base.child('discussions');
 
   void addUser(String uid, Map map) {
     try {
@@ -65,6 +67,45 @@ class Firebase {
         .catchError(print)
         .asStream()
         .map((DataSnapshot dataSnapshot) => User.fromMap(dataSnapshot));
+  }
+
+  void sendMessage(User user, User me, String text, String imageUrl) {
+    String date = DateTime.now().millisecondsSinceEpoch.toString();
+    Map m = {
+      'from': me.id,
+      'to': user.id,
+      'text': text,
+      'imageUrl': imageUrl,
+      'dateString': date
+    };
+    baseMsg.child(getMessageRef(me.id, user.id)).child(date).set(m);
+    baseDiscussion
+        .child(me.id)
+        .child(user.id)
+        .set(getDiscussion(me.id, user, text, date));
+    baseDiscussion
+        .child(user.id)
+        .child(me.id)
+        .set(getDiscussion(me.id, me, text, date));
+  }
+
+  Map getDiscussion(
+      String sender, User interlocutor, String text, String dateString) {
+    Map m = interlocutor.toMap();
+    m['myID'] = sender;
+    m['lastMsg'] = text;
+    m['dateString'] = dateString;
+    return m;
+  }
+
+  String getMessageRef(String from, String to) {
+    String res;
+    List<String> l = [from, to];
+    l.sort((a, b) => a.compareTo(b));
+    for (var x in l) {
+      res += x + '+';
+    }
+    return res;
   }
 
   // storage
