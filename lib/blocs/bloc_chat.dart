@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chat_bloc_rxdart/blocs/base.dart';
 import 'package:flutter_chat_bloc_rxdart/constants.dart';
@@ -24,6 +25,9 @@ class BlocChat extends BlocBase {
       sink.add(user);
     });
   }
+
+  Query get query =>
+      _firebase.baseMsg.child(_firebase.getMessageRef(id, interlocutor.id));
 
   @override
   void dispose() {

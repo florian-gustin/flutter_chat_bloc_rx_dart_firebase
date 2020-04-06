@@ -7,6 +7,8 @@ import 'package:rxdart/rxdart.dart';
 
 class BlocRoot extends BlocBase {
   User _user = User();
+  String get userID => _user.id;
+
   Firebase firebase = Firebase();
 
   BehaviorSubject<User> _subjectUser = BehaviorSubject<User>();

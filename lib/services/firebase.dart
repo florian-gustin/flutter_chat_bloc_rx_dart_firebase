@@ -99,7 +99,7 @@ class Firebase {
   }
 
   String getMessageRef(String from, String to) {
-    String res;
+    String res = '';
     List<String> l = [from, to];
     l.sort((a, b) => a.compareTo(b));
     for (var x in l) {
@@ -111,6 +111,7 @@ class Firebase {
   // storage
   static final baseStorage = FirebaseStorage.instance.ref();
   final StorageReference storageUsers = baseStorage.child('users');
+  final StorageReference storageMsgs = baseStorage.child('messages');
 
   Stream<dynamic> savePicture(File file, StorageReference storageReference) {
     return Stream.fromFuture(getImageFirestoreUrl(file, storageReference))
